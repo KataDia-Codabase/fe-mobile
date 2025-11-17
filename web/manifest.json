@@ -1,6 +1,6 @@
 {
-    "name": "katadia_app",
-    "short_name": "bahasaku_app",
+    "name": "katadia_fe",
+    "short_name": "katadia_fe",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
