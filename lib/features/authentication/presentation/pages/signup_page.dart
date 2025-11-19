@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/index.dart';
+import '../../../../../data/datasources/local/auth_local_datasource.dart';
+import '../../../../../data/datasources/local/database_service.dart';
+import '../../../../../data/repositories/auth_repository_impl.dart';
+import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/signup_usecase.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_state.dart';
 import '../widgets/login/index.dart';
 import 'profile_photo_page.dart';
 
@@ -14,35 +21,75 @@ class _SignupPageState extends State<SignupPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late AuthBLoC _authBLoC;
+  late bool _isLoading;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = false;
+    _initializeAuthBLoC();
+    _authBLoC.addListener(_handleAuthStateChange);
+  }
+
+  void _initializeAuthBLoC() {
+    final databaseService = DatabaseService();
+    final localDataSource =
+        AuthLocalDataSourceImpl(databaseService: databaseService);
+    final authRepository =
+        AuthRepositoryImpl(localDataSource: localDataSource);
+
+    _authBLoC = AuthBLoC(
+      loginUseCase: LoginUseCase(authRepository: authRepository),
+      signupUseCase: SignupUseCase(authRepository: authRepository),
+    );
+  }
+
+  void _handleAuthStateChange(AuthState state) {
+    if (state is AuthLoading) {
+      setState(() => _isLoading = true);
+    } else if (state is AuthSuccess) {
+      setState(() => _isLoading = false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ProfilePhotoPage(
+            name: state.user.name,
+            email: state.user.email,
+            password: _passwordController.text,
+          ),
+        ),
+      );
+    } else if (state is AuthError) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.message)),
+      );
+    }
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _authBLoC.removeListener(_handleAuthStateChange);
     super.dispose();
   }
 
   void _signUp() {
-    if (_nameController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty) {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Mohon isi semua field')),
       );
       return;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ProfilePhotoPage(
-          name: _nameController.text,
-          email: _emailController.text,
-          password: _passwordController.text,
-        ),
-      ),
-    );
+    _authBLoC.signup(name, email, password);
   }
 
   void _backToLogin() {
@@ -89,8 +136,8 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 SizedBox(height: AppSpacing.xxxl + AppSpacing.xs),
                 AuthButton(
-                  label: 'Daftar',
-                  onPressed: _signUp,
+                  label: _isLoading ? 'Memproses...' : 'Daftar',
+                  onPressed: _isLoading ? () {} : _signUp,
                 ),
                 SizedBox(height: AppSpacing.xxl),
                 AuthLink(

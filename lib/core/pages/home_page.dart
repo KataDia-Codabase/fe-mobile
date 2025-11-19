@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
                   const UserInfoCard(),
                   SizedBox(height: AppSpacing.xxl),
                   const DailyTasksCard(),
-                  SizedBox(height: AppSpacing.xl),
+                  SizedBox(height: AppSpacing.xxl),
                   const FeatureGrid(),
                   SizedBox(height: AppSpacing.md),
                 ],
@@ -42,9 +42,17 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: HomeBottomNavbar(
         selectedIndex: _selectedTab,
         onTap: (index) {
-          setState(() {
-            _selectedTab = index;
-          });
+          if (index == 2) {
+            Navigator.pushNamed(context, '/progress');
+          } else if (index == 3) {
+            Navigator.pushNamed(context, '/leaderboard');
+          } else if (index == 4) {
+            Navigator.pushNamed(context, '/profile');
+          } else {
+            setState(() {
+              _selectedTab = index;
+            });
+          }
         },
       ),
     );

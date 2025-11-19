@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../../core/utils/index.dart';
+import 'onboarding_page_three.dart';
 
 class OnboardingPageTwo extends StatelessWidget {
   const OnboardingPageTwo({super.key});
@@ -241,11 +243,19 @@ class OnboardingPageTwo extends StatelessWidget {
   }
 
   void _goToNext(BuildContext context) {
-    // TODO: Navigate to onboarding page 3
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const OnboardingPageThree()),
+    );
   }
 
   void _skipOnboarding(BuildContext context) {
-    // TODO: Navigate to Login (skip onboarding)
+    Logger.info('Skipping onboarding from page 2', tag: 'Onboarding');
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (route) => false,
+    );
   }
 }
 

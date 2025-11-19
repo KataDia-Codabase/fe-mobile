@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../../core/theme/index.dart';
-import '../../../../core/pages/home_page.dart';
+import '../../../../../core/utils/index.dart';
 import '../widgets/login/auth_button.dart';
 import '../widgets/profile_photo/index.dart';
 
@@ -21,20 +23,68 @@ class ProfilePhotoPage extends StatefulWidget {
 }
 
 class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
+  late ImagePicker _imagePicker;
+  File? _selectedImage;
+  bool _isLoading = false;
+  bool _isSkipping = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _imagePicker = ImagePicker();
+  }
+
   void _goToHome() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      '/home',
       (route) => false,
     );
   }
 
-  void _skipProfilePhoto() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-      (route) => false,
-    );
+  Future<void> _skipProfilePhoto() async {
+    setState(() => _isSkipping = true);
+    
+    Logger.info('Skipping profile photo setup', tag: 'ProfilePhoto');
+    
+    // Simulate process
+    await Future.delayed(const Duration(seconds: 1));
+    
+    if (mounted) {
+      _goToHome();
+    }
+  }
+
+  Future<void> _handlePickImage() async {
+    try {
+      final pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        setState(() => _selectedImage = File(pickedFile.path));
+        Logger.success('Image selected: ${pickedFile.name}', tag: 'ProfilePhoto');
+
+        // Simulate upload
+        setState(() => _isLoading = true);
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            setState(() => _isLoading = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Foto profil berhasil di-upload')),
+            );
+            _goToHome();
+          }
+        });
+      }
+    } catch (e) {
+      Logger.error('Failed to pick image', tag: 'ProfilePhoto', error: e);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal memilih foto')),
+        );
+      }
+    }
   }
 
   @override
@@ -60,19 +110,27 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
                 style: AppTextStyles.bodyLarge.copyWith(color: AppColors.textMedium),
               ),
               SizedBox(height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.lg),
-              const ProfilePhotoPlaceholder(),
+              _selectedImage != null
+                  ? ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(AppSpacing.radiusLarge),
+                      child: Image.file(
+                        _selectedImage!,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : const ProfilePhotoPlaceholder(),
               const Spacer(),
               AuthButton(
-                label: 'Pilih Foto',
-                onPressed: () {
-                  // TODO: Implement image picker
-                  _goToHome();
-                },
+                label: _isLoading ? 'Mengunggah...' : 'Pilih Foto',
+                onPressed: _isLoading ? () {} : _handlePickImage,
               ),
               SizedBox(height: AppSpacing.lg),
               AuthButton(
-                label: 'Lewati untuk Sekarang',
-                onPressed: _skipProfilePhoto,
+                label: _isSkipping ? 'Memproses...' : 'Lewati untuk Sekarang',
+                onPressed: _isSkipping ? () {} : _skipProfilePhoto,
                 isOutlined: true,
                 textColor: AppColors.textMedium,
               ),

@@ -34,6 +34,9 @@ class FeatureGrid extends StatelessWidget {
               subtitle: 'Practice conversation',
               iconColor: AppColors.accentPurple,
               backgroundColor: AppColors.accentPurple.withValues(alpha: 0.1),
+              onTap: () {
+                Navigator.pushNamed(context, '/ai-chat');
+              },
             ),
             FeatureCard(
               icon: Icons.trending_up,
@@ -41,6 +44,9 @@ class FeatureGrid extends StatelessWidget {
               subtitle: 'Track learning',
               iconColor: AppColors.accentGreen,
               backgroundColor: AppColors.accentGreen.withValues(alpha: 0.1),
+              onTap: () {
+                Navigator.pushNamed(context, '/progress');
+              },
             ),
             FeatureCard(
               icon: Icons.emoji_events,
@@ -48,6 +54,9 @@ class FeatureGrid extends StatelessWidget {
               subtitle: 'XP & badges',
               iconColor: AppColors.accentYellow,
               backgroundColor: AppColors.accentYellow.withValues(alpha: 0.1),
+              onTap: () {
+                Navigator.pushNamed(context, '/rewards');
+              },
             ),
           ],
         ),

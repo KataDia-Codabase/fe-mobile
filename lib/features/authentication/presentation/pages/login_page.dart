@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/index.dart';
+import '../../../../../data/datasources/local/auth_local_datasource.dart';
+import '../../../../../data/datasources/local/database_service.dart';
+import '../../../../../data/repositories/auth_repository_impl.dart';
+import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/signup_usecase.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_state.dart';
 import '../widgets/login/index.dart';
 import 'signup_page.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,16 +21,56 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late AuthBLoC _authBLoC;
+  late bool _isLoading;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoading = false;
+    _initializeAuthBLoC();
+    _authBLoC.addListener(_handleAuthStateChange);
+  }
+
+  void _initializeAuthBLoC() {
+    final databaseService = DatabaseService();
+    final localDataSource =
+        AuthLocalDataSourceImpl(databaseService: databaseService);
+    final authRepository =
+        AuthRepositoryImpl(localDataSource: localDataSource);
+
+    _authBLoC = AuthBLoC(
+      loginUseCase: LoginUseCase(authRepository: authRepository),
+      signupUseCase: SignupUseCase(authRepository: authRepository),
+    );
+  }
+
+  void _handleAuthStateChange(AuthState state) {
+    if (state is AuthLoading) {
+      setState(() => _isLoading = true);
+    } else if (state is AuthSuccess) {
+      setState(() => _isLoading = false);
+      Navigator.pushReplacementNamed(context, '/home');
+    } else if (state is AuthError) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.message)),
+      );
+    }
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _authBLoC.removeListener(_handleAuthStateChange);
     super.dispose();
   }
 
   void _signIn() {
-    // TODO: Implement login functionality
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    _authBLoC.login(email, password);
   }
 
   void _signUpNavigation() {
@@ -33,7 +81,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _forgotPasswordNavigation() {
-    // TODO: Navigate to forgot password page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
+    );
   }
 
   void _googleSignIn() {
@@ -77,8 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: AppSpacing.xxl),
                 AuthButton(
-                  label: 'Masuk',
-                  onPressed: _signIn,
+                  label: _isLoading ? 'Memproses...' : 'Masuk',
+                  onPressed: _isLoading ? () {} : _signIn,
                 ),
                 SizedBox(height: AppSpacing.xxl),
                 const DividerOr(),

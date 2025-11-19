@@ -39,11 +39,16 @@ class OnboardingBloc {
   void _onNextPageRequested() {
     int nextPage = _state.currentPage + 1;
     bool isLastPage = nextPage >= 2; // Assuming 3 pages (0, 1, 2)
+    bool isCompleted = nextPage > 2; // Complete when trying to go beyond last page
     
-    _emit(_state.copyWith(
-      currentPage: nextPage,
-      isLastPage: isLastPage,
-    ));
+    if (isCompleted) {
+      _emit(_state.copyWith(isCompleted: true));
+    } else {
+      _emit(_state.copyWith(
+        currentPage: nextPage,
+        isLastPage: isLastPage,
+      ));
+    }
   }
 
   void _onPreviousPageRequested() {
@@ -66,8 +71,6 @@ class OnboardingBloc {
   }
 
   void _onSkipOnboardingRequested() {
-    // TODO: Navigate to main app or login
-    // This would typically complete onboarding and navigate away
-    
+    _emit(_state.copyWith(isCompleted: true));
   }
 }

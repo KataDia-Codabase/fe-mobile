@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../core/utils/index.dart';
 
 import 'onboarding_page_two.dart';
 
@@ -233,7 +234,11 @@ class OnboardingPageOne extends StatelessWidget {
   }
 
   void _navigateToHome(BuildContext context) {
-    // TODO: Navigate to Login (skip onboarding)
-    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => HomePage()), (route) => false);
+    Logger.info('Skipping onboarding from page 1', tag: 'Onboarding');
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (route) => false,
+    );
   }
 }
