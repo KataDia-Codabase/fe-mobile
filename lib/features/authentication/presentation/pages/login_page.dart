@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/index.dart';
-import '../../../../../data/datasources/local/auth_local_datasource.dart';
-import '../../../../../data/datasources/local/database_service.dart';
-import '../../../../../data/repositories/auth_repository_impl.dart';
+import '../../../../../core/services/index.dart';
+import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/signup_usecase.dart';
 import '../bloc/auth_bloc.dart';
@@ -33,11 +33,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _initializeAuthBLoC() {
-    final databaseService = DatabaseService();
-    final localDataSource =
-        AuthLocalDataSourceImpl(databaseService: databaseService);
+    final apiService = ApiService();
+    final remoteDataSource =
+        AuthRemoteDataSourceImpl(apiService: apiService);
     final authRepository =
-        AuthRepositoryImpl(localDataSource: localDataSource);
+        AuthRepositoryImpl(remoteDataSource: remoteDataSource);
 
     _authBLoC = AuthBLoC(
       loginUseCase: LoginUseCase(authRepository: authRepository),
