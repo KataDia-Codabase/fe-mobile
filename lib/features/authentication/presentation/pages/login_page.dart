@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/index.dart';
-import '../../../../../core/services/index.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
+import '../../../../../core/pages/home_page.dart';
+import '../../../../../data/datasources/local/auth_local_datasource.dart';
+import '../../../../../data/datasources/local/database_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/signup_usecase.dart';
@@ -33,11 +34,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _initializeAuthBLoC() {
-    final apiService = ApiService();
-    final remoteDataSource =
-        AuthRemoteDataSourceImpl(apiService: apiService);
-    final authRepository =
-        AuthRepositoryImpl(remoteDataSource: remoteDataSource);
+    final databaseService = DatabaseService();
+    final localDataSource = AuthLocalDataSourceImpl(databaseService: databaseService);
+    final authRepository = AuthRepositoryImpl(localDataSource: localDataSource);
 
     _authBLoC = AuthBLoC(
       loginUseCase: LoginUseCase(authRepository: authRepository),
@@ -50,7 +49,11 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => _isLoading = true);
     } else if (state is AuthSuccess) {
       setState(() => _isLoading = false);
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const HomePage()),
+      (route) => false,
+    );
     } else if (state is AuthError) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,6 +83,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _googleSignIn() {
+    // TODO: Implement Google sign in - using SQLite for now
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Google Sign In akan diimplementasikan nanti')),
+    );
+  }
+
   void _forgotPasswordNavigation() {
     Navigator.push(
       context,
@@ -87,9 +97,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _googleSignIn() {
-    // TODO: Implement Google sign in
-  }
+  
 
   @override
   Widget build(BuildContext context) {

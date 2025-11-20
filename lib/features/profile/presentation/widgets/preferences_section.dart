@@ -16,17 +16,14 @@ class PreferencesSection extends StatelessWidget {
         ),
         SizedBox(height: AppSpacing.md),
         Container(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.sm,
+          ),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.shadowLight,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXL),
+            boxShadow: AppShadows.light,
           ),
           child: Column(
             children: [
@@ -40,7 +37,7 @@ class PreferencesSection extends StatelessWidget {
                   );
                 },
               ),
-              Divider(color: AppColors.borderLight, height: 24),
+              Divider(color: AppColors.borderLight, height: 1),
               ProfileMenuItem(
                 icon: Icons.notifications_outlined,
                 title: 'Notifications',
@@ -51,14 +48,14 @@ class PreferencesSection extends StatelessWidget {
                   );
                 },
               ),
-              Divider(color: AppColors.borderLight, height: 24),
+              Divider(color: AppColors.borderLight, height: 1),
               ProfileMenuItem(
-                icon: Icons.brightness_6,
-                title: 'Theme',
-                subtitle: 'Light',
+                icon: Icons.flag_circle_outlined,
+                title: 'Daily Goal',
+                subtitle: '15 minutes',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Theme tapped')),
+                    const SnackBar(content: Text('Daily Goal tapped')),
                   );
                 },
               ),

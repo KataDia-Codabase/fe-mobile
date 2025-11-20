@@ -13,58 +13,67 @@ class SuggestedTopics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: Text(
-            'Suggested topics:',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textMedium,
-            ),
-          ),
-        ),
-        SizedBox(height: AppSpacing.md),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+    return Padding(
+      padding: EdgeInsets.only(
+        top: AppSpacing.md,
+        left: AppSpacing.xxl,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              SizedBox(width: AppSpacing.lg),
-              ...topics.map((topic) {
-                return Padding(
-                  padding: EdgeInsets.only(right: AppSpacing.md),
-                  child: GestureDetector(
-                    onTap: () => onTopicSelect(topic),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.sm,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF9333EA).withValues(alpha: 0.15),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusSmall),
-                        border: Border.all(
-                          color: const Color(0xFF9333EA).withValues(alpha: 0.3),
+              const Icon(
+                Icons.lightbulb_outline,
+                color: AppColors.accentYellow,
+                size: 16,
+              ),
+              SizedBox(width: AppSpacing.sm),
+              Text(
+                'Suggested topics:',
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textMedium,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.md),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ...topics.map((topic) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: AppSpacing.md),
+                    child: GestureDetector(
+                      onTap: () => onTopicSelect(topic),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.sm,
                         ),
-                      ),
-                      child: Text(
-                        topic,
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: const Color(0xFF9333EA),
-                          fontWeight: FontWeight.w600,
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusLarge),
+                          boxShadow: AppShadows.light,
+                        ),
+                        child: Text(
+                          topic,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-              SizedBox(width: AppSpacing.lg),
-            ],
+                  );
+                }),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

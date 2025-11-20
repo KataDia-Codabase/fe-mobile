@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../core/theme/index.dart';
 import '../../../../../core/utils/index.dart';
+import '../../../../../core/pages/home_page.dart';
+import '../../../../../data/datasources/local/database_service.dart';
 import '../widgets/login/auth_button.dart';
 import '../widgets/profile_photo/index.dart';
 
@@ -24,6 +26,7 @@ class ProfilePhotoPage extends StatefulWidget {
 
 class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
   late ImagePicker _imagePicker;
+  final DatabaseService _databaseService = DatabaseService();
   File? _selectedImage;
   bool _isLoading = false;
   bool _isSkipping = false;
@@ -35,9 +38,9 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
   }
 
   void _goToHome() {
-    Navigator.pushNamedAndRemoveUntil(
+    Navigator.pushAndRemoveUntil(
       context,
-      '/home',
+      MaterialPageRoute(builder: (_) => const HomePage()),
       (route) => false,
     );
   }
@@ -49,6 +52,7 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
     
     // Simulate process
     await Future.delayed(const Duration(seconds: 1));
+    await _saveProfilePhoto(null);
     
     if (mounted) {
       _goToHome();
@@ -73,7 +77,7 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Foto profil berhasil di-upload')),
             );
-            _goToHome();
+            _saveProfilePhoto(_selectedImage?.path).then((_) => _goToHome());
           }
         });
       }
@@ -140,5 +144,21 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveProfilePhoto(String? path) async {
+    try {
+      final user = await _databaseService.getUser(widget.email);
+      if (user == null) {
+        Logger.warning('User not found for profile photo update', tag: 'ProfilePhoto');
+        return;
+      }
+
+      final updatedUser = user.copyWith(avatar: path);
+      await _databaseService.updateUser(updatedUser);
+      Logger.success('Profile photo saved to database', tag: 'ProfilePhoto');
+    } catch (e) {
+      Logger.error('Failed to save profile photo', tag: 'ProfilePhoto', error: e);
+    }
   }
 }

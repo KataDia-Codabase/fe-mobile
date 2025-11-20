@@ -2,6 +2,8 @@ class User {
   final String id;
   final String name;
   final String email;
+  final String? avatar;
+  final String? accessToken;
   final String cefrLevel;
   final int xp;
   final int streak;
@@ -10,6 +12,8 @@ class User {
     required this.id,
     required this.name,
     required this.email,
+    this.avatar,
+    this.accessToken,
     this.cefrLevel = 'A1',
     this.xp = 0,
     this.streak = 0,

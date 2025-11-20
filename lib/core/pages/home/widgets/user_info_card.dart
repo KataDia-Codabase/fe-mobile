@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/index.dart';
+import 'package:katadia_fe/core/theme/index.dart';
+import 'package:katadia_fe/core/utils/index.dart';
+
 import 'stat_container.dart';
 
 class UserInfoCard extends StatelessWidget {
-  const UserInfoCard({super.key});
+  final String cefrBadge;
+  final String cefrTitle;
+  final String cefrDescription;
+  final int totalXp;
+  final int lessonsCompleted;
+  final int streakDays;
+
+  const UserInfoCard({
+    super.key,
+    required this.cefrBadge,
+    required this.cefrTitle,
+    required this.cefrDescription,
+    required this.totalXp,
+    required this.lessonsCompleted,
+    required this.streakDays,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +30,10 @@ class UserInfoCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXL),
         boxShadow: AppShadows.medium,
+        border: Border.all(
+          color: AppColors.borderLight,
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,16 +41,16 @@ class UserInfoCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: AppSpacing.containerSmall,
-                height: AppSpacing.containerSmall,
+                width: AppSpacing.containerMedium,
+                height: AppSpacing.containerMedium,
                 decoration: BoxDecoration(
                   color: AppColors.accentYellow,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
                 ),
                 child: Center(
                   child: Text(
-                    'B1',
-                    style: AppTextStyles.badge,
+                    cefrBadge,
+                    style: AppTextStyles.badge.copyWith(color: AppColors.textDark),
                   ),
                 ),
               ),
@@ -39,13 +60,18 @@ class UserInfoCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'CEFR Level B1',
-                      style: AppTextStyles.bodyLarge,
+                      cefrTitle,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
+                      ),
                     ),
                     SizedBox(height: AppSpacing.xs),
                     Text(
-                      'Intermediate - Independent User',
-                      style: AppTextStyles.labelMedium,
+                      cefrDescription,
+                      style: AppTextStyles.labelMedium.copyWith(
+                        color: AppColors.textMedium,
+                      ),
                     ),
                   ],
                 ),
@@ -55,11 +81,20 @@ class UserInfoCard extends StatelessWidget {
           SizedBox(height: AppSpacing.xl),
           Row(
             children: [
-              const StatContainer(value: '1,250', label: 'XP'),
+              StatContainer(
+                value: StringFormatter.formatNumber(totalXp),
+                label: 'XP',
+              ),
               SizedBox(width: AppSpacing.md),
-              const StatContainer(value: '7', label: 'Days Streak'),
+              StatContainer(
+                value: streakDays.toString(),
+                label: 'Days Streak',
+              ),
               SizedBox(width: AppSpacing.md),
-              const StatContainer(value: '12', label: 'Lessons'),
+              StatContainer(
+                value: lessonsCompleted.toString(),
+                label: 'Lessons',
+              ),
             ],
           ),
         ],

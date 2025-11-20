@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/index.dart';
-import '../../../../../core/utils/index.dart';
+import 'package:katadia_fe/core/theme/index.dart';
+import 'package:katadia_fe/core/utils/index.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../widgets/index.dart';
 
@@ -15,7 +15,7 @@ class _AIChatPageState extends State<AIChatPage> {
   late List<ChatMessage> _messages;
   bool _isLoading = false;
 
-  final List<String> _suggestedTopics = [
+  final List<String> _suggestedTopics = const [
     'Daily routine',
     'Hobbies',
     'Travel',
@@ -30,14 +30,12 @@ class _AIChatPageState extends State<AIChatPage> {
   }
 
   void _initializeChat() {
-    // Initial AI message
     final initialMessage = ChatMessage(
       id: '0',
       content:
-          "Hello! I'm your AI conversation partner. Let's practice English together! What would you like to talk about today?",
+          "Hi! I'm your AI assistant. How can I help you learn today?",
       role: MessageRole.assistant,
       timestamp: DateTime.now(),
-      audioUrl: '', // In real app, this would be an actual audio URL
     );
 
     setState(() {
@@ -50,9 +48,8 @@ class _AIChatPageState extends State<AIChatPage> {
   void _sendMessage(String message) {
     if (message.isEmpty) return;
 
-    // Add user message
     final userMessage = ChatMessage(
-      id: DateTime.now().toString(),
+      id: DateTime.now().toIso8601String(),
       content: message,
       role: MessageRole.user,
       timestamp: DateTime.now(),
@@ -65,31 +62,27 @@ class _AIChatPageState extends State<AIChatPage> {
 
     Logger.info('User message: $message', tag: 'AiChat');
 
-    // Simulate AI response delay
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        final aiMessage = ChatMessage(
-          id: DateTime.now().toString(),
-          content:
-              'That\'s great! Tell me more about that. I\'d love to hear your thoughts on this topic.',
-          role: MessageRole.assistant,
-          timestamp: DateTime.now(),
-          audioUrl: '', // In real app, this would be real audio
-        );
+      if (!mounted) return;
+      final aiMessage = ChatMessage(
+        id: DateTime.now().toIso8601String(),
+        content:
+            'Great! Let’s keep going. Would you like to continue with daily activities vocabulary?',
+        role: MessageRole.assistant,
+        timestamp: DateTime.now(),
+      );
 
-        setState(() {
-          _messages.add(aiMessage);
-          _isLoading = false;
-        });
+      setState(() {
+        _messages.add(aiMessage);
+        _isLoading = false;
+      });
 
-        Logger.success('AI response received', tag: 'AiChat');
-      }
+      Logger.success('AI response received', tag: 'AiChat');
     });
   }
 
   void _selectTopic(String topic) {
-    final message = 'Let\'s talk about $topic';
-    _sendMessage(message);
+    _sendMessage('I want to practice talking about $topic.');
   }
 
   void _playAudio() {
@@ -99,20 +92,26 @@ class _AIChatPageState extends State<AIChatPage> {
     );
   }
 
+  void _handleMic() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Voice input coming soon!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgLight,
       body: Column(
         children: [
-          // Header
           ChatHeader(
             onBack: () => Navigator.pop(context),
-            messages: _messages.length,
-            topics: 3,
-            xp: 120,
+            onInfo: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('AI chat helps you practice conversations.')),
+              );
+            },
           ),
-          // Chat messages
           Expanded(
             child: _messages.isEmpty
                 ? Center(
@@ -124,10 +123,10 @@ class _AIChatPageState extends State<AIChatPage> {
                     ),
                   )
                 : ListView.builder(
-                    reverse: true,
+                    padding: EdgeInsets.only(top: AppSpacing.lg),
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      final message = _messages[_messages.length - 1 - index];
+                      final message = _messages[index];
                       return ChatBubble(
                         message: message,
                         onPlayAudio: _playAudio,
@@ -135,16 +134,14 @@ class _AIChatPageState extends State<AIChatPage> {
                     },
                   ),
           ),
-          // Suggested topics (if no user messages yet)
-          if (_messages.length <= 1)
-            SuggestedTopics(
-              topics: _suggestedTopics,
-              onTopicSelect: _selectTopic,
-            ),
-          // Chat input
+          SuggestedTopics(
+            topics: _suggestedTopics,
+            onTopicSelect: _selectTopic,
+          ),
           ChatInput(
             onSend: _sendMessage,
             isLoading: _isLoading,
+            onMicPressed: _handleMic,
           ),
         ],
       ),

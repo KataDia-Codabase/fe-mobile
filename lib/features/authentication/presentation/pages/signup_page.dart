@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:katadia_fe/core/pages/home_page.dart';
 import '../../../../../core/theme/index.dart';
-import '../../../../../core/services/index.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
+import '../../../../../data/datasources/local/auth_local_datasource.dart';
+import '../../../../../data/datasources/local/database_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/signup_usecase.dart';
@@ -34,11 +34,9 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _initializeAuthBLoC() {
-    final apiService = ApiService();
-    final remoteDataSource =
-        AuthRemoteDataSourceImpl(apiService: apiService);
-    final authRepository =
-        AuthRepositoryImpl(remoteDataSource: remoteDataSource);
+    final databaseService = DatabaseService();
+    final localDataSource = AuthLocalDataSourceImpl(databaseService: databaseService);
+    final authRepository = AuthRepositoryImpl(localDataSource: localDataSource);
 
     _authBLoC = AuthBLoC(
       loginUseCase: LoginUseCase(authRepository: authRepository),

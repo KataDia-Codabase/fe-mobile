@@ -6,6 +6,8 @@ class ProfileMenuItem extends StatelessWidget {
   final String title;
   final String? subtitle;
   final VoidCallback? onTap;
+  final Color? iconColor;
+  final Color? iconBackgroundColor;
 
   const ProfileMenuItem({
     super.key,
@@ -13,6 +15,8 @@ class ProfileMenuItem extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.onTap,
+    this.iconColor,
+    this.iconBackgroundColor,
   });
 
   @override
@@ -24,15 +28,17 @@ class ProfileMenuItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: iconBackgroundColor ?? AppColors.bgDisabled,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
               ),
               child: Icon(
                 icon,
-                color: AppColors.primary,
-                size: 24,
+                color: iconColor ?? AppColors.textMedium,
+                size: AppSpacing.iconMedium,
               ),
             ),
             SizedBox(width: AppSpacing.lg),
@@ -57,9 +63,8 @@ class ProfileMenuItem extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios,
+              Icons.chevron_right,
               color: AppColors.textLight,
-              size: 18,
             ),
           ],
         ),

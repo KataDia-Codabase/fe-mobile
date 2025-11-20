@@ -14,8 +14,16 @@ class AppConstants {
   
   // Route Names
   static const String splashRoute = '/splash';
+  static const String onboardingRoute = '/onboarding';
   static const String loginRoute = '/login';
-  static const String registerRoute = '/register';
+  static const String signupRoute = '/signup';
+  static const String forgotPasswordRoute = '/forgot-password';
+  static const String profilePhotoRoute = '/profile-photo';
   static const String homeRoute = '/home';
+  static const String aiChatRoute = '/ai-chat';
+  static const String rewardsRoute = '/rewards';
+  static const String progressRoute = '/progress';
   static const String profileRoute = '/profile';
+  static const String leaderboardRoute = '/leaderboard';
+  static const String cefrAssessmentRoute = '/cefr-assessment';
 }

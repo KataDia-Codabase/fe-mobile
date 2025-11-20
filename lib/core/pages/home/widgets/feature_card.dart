@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/index.dart';
+import 'package:katadia_fe/core/theme/index.dart';
 
 class FeatureCard extends StatelessWidget {
   final IconData icon;
@@ -21,49 +21,59 @@ class FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-      child: Container(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-          boxShadow: AppShadows.light,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: AppSpacing.containerMedium,
-              height: AppSpacing.containerMedium,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLarge - 2),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+        child: Container(
+          padding: EdgeInsets.all(AppSpacing.xl),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+            boxShadow: AppShadows.light,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: AppSpacing.containerMedium,
+                height: AppSpacing.containerMedium,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                  size: AppSpacing.iconXXL,
+                ),
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: AppSpacing.iconXXL,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                  SizedBox(height: AppSpacing.xs),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.textMedium,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: AppSpacing.md),
-            Text(
-              title,
-              style: AppTextStyles.statValue,
-            ),
-            SizedBox(height: AppSpacing.xs),
-            Expanded(
-              child: Text(
-                subtitle,
-                style: AppTextStyles.labelSmall,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/theme/index.dart';
+import 'package:katadia_fe/core/theme/index.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String userName;
+  final int notificationCount;
+  final VoidCallback? onNotificationTap;
+
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    this.notificationCount = 0,
+    this.onNotificationTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,37 +34,87 @@ class HomeHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Halo, Selamat Datang! 👋',
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Halo, Selamat Datang! 👋',
+                      style:
+                          AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+                    ),
+                    SizedBox(height: AppSpacing.xs),
+                    Text(
+                      userName,
+                      style: AppTextStyles.heading3.copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              Container(
-                width: AppSpacing.containerSmall,
-                height: AppSpacing.containerSmall,
-                decoration: BoxDecoration(
-                  color: AppColors.whiteWithAlpha(0.2),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-                ),
-                child: Icon(
-                  Icons.notifications_rounded,
-                  color: Colors.white,
-                  size: AppSpacing.iconSmall,
-                ),
+              _NotificationButton(
+                notificationCount: notificationCount,
+                onTap: onNotificationTap,
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.xs),
-          const Text(
-            'Sarah Anderson',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
         ],
+      ),
+    );
+  }
+}
+
+class _NotificationButton extends StatelessWidget {
+  final int notificationCount;
+  final VoidCallback? onTap;
+
+  const _NotificationButton({
+    required this.notificationCount,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasNotifications = notificationCount > 0;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: AppSpacing.containerSmall,
+              height: AppSpacing.containerSmall,
+              decoration: BoxDecoration(
+                color: AppColors.whiteWithAlpha(0.15),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              ),
+              child: Icon(
+                Icons.notifications_rounded,
+                color: Colors.white,
+                size: AppSpacing.iconSmall,
+              ),
+            ),
+            if (hasNotifications)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: AppColors.error,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 1.5),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

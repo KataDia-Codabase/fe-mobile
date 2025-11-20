@@ -6,6 +6,7 @@ abstract class AuthLocalDataSource {
   Future<void> saveUser(UserModel user);
   Future<UserModel?> getUser(String email);
   Future<UserModel?> getUserById(String id);
+  Future<List<UserModel>> getAllUsers();
   Future<void> deleteUser(String id);
   Future<void> logout();
 }
@@ -62,6 +63,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       Logger.info('User deleted from local database', tag: 'LocalDataSource');
     } catch (e) {
       Logger.error('Failed to delete user', tag: 'LocalDataSource', error: e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<UserModel>> getAllUsers() async {
+    try {
+      final users = await _databaseService.getAllUsers();
+      Logger.info('All users retrieved from local database', tag: 'LocalDataSource');
+      return users;
+    } catch (e) {
+      Logger.error('Failed to get all users', tag: 'LocalDataSource', error: e);
       rethrow;
     }
   }
