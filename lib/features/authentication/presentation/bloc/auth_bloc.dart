@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/signup_usecase.dart';
 import 'auth_state.dart';
@@ -50,6 +52,13 @@ class AuthBLoC {
       emit(AuthSuccess(user));
     } catch (e) {
       emit(AuthError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  void updateUser(User updatedUser) {
+    if (_state is AuthSuccess) {
+      emit(AuthSuccess(updatedUser));
+      debugPrint('✅ AuthBLoC updated with new user: ${updatedUser.email}');
     }
   }
 

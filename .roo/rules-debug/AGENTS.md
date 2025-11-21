@@ -1,0 +1,24 @@
+# Project Debug Rules (Non-Obvious Only)
+
+- Logger utility only outputs in debug mode - use Logger.info/error/debug/warning/success with emoji prefixes
+- API calls should be logged with Logger.api() and Logger.apiResponse() for request/response tracking
+- Performance metrics logged with Logger.performance() to track operation durations
+- Custom BLoC state changes not automatically visible - add Logger.debug() in emit() methods
+- Error states strip "Exception: " prefix - check raw exception in logs for debugging
+- Two API base URLs exist: constants (https://api.katadia.com) vs service (http://10.0.2.2:3000)
+- SharedPreferences data stored locally - check device storage for authentication state
+- Navigation issues often caused by missing setState() in BLoC listener callbacks
+- Memory leaks occur if BLoC listeners not removed in dispose() methods
+- Theme constants not applying when hardcoded colors used in widgets
+- Indonesian UI text may cause confusion during debugging - check translation keys
+- Hot reload may lose navigation state - use full restart for navigation testing
+- Form validation errors in Indonesian - check Validators class for English equivalents
+- Device detection uses 600px width threshold - test both phone/tablet layouts
+- Date formatting uses Indonesian names - check DateFormatter for English equivalents
+- XP formatting uses K/M suffixes - check StringFormatter.formatXP() for raw values
+- State management issues often traced to missing setState() in listener callbacks
+- Repository pattern may obscure data flow - check both data and domain layers
+- UseCase validation failures throw exceptions before repository calls
+- Widget rebuild issues often caused by missing setState() in BLoC listeners
+- Network requests fail silently without proper error handling in ApiService
+- Authentication state persists in SharedPreferences - clear for fresh login testing

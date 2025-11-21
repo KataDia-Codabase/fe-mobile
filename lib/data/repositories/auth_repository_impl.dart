@@ -20,7 +20,16 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       Logger.success('Login successful', tag: 'Repository');
-      return userModel.toEntity();
+      return User(
+        id: userModel.id,
+        name: userModel.name,
+        email: userModel.email,
+        avatar: userModel.avatar,
+        accessToken: userModel.accessToken,
+        cefrLevel: userModel.cefrLevel,
+        xp: userModel.xp,
+        streak: userModel.streak,
+      );
     } catch (e) {
       Logger.error('Login failed', tag: 'Repository', error: e);
       rethrow;
@@ -43,6 +52,7 @@ class AuthRepositoryImpl implements AuthRepository {
         id: userId,
         name: name,
         email: email,
+        password: password,
         cefrLevel: 'A1',
         xp: 0,
         streak: 0,
@@ -51,7 +61,16 @@ class AuthRepositoryImpl implements AuthRepository {
       await _localDataSource.saveUser(newUser);
       Logger.success('Signup successful', tag: 'Repository');
 
-      return newUser.toEntity();
+      return User(
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        avatar: newUser.avatar,
+        accessToken: newUser.accessToken,
+        cefrLevel: newUser.cefrLevel,
+        xp: newUser.xp,
+        streak: newUser.streak,
+      );
     } catch (e) {
       Logger.error('Signup failed', tag: 'Repository', error: e);
       rethrow;

@@ -5,18 +5,17 @@ import '../../../../../core/theme/index.dart';
 import '../../../../../core/utils/index.dart';
 import '../../../../../core/pages/home_page.dart';
 import '../../../../../data/datasources/local/database_service.dart';
+import '../../domain/entities/user_entity.dart';
 import '../widgets/login/auth_button.dart';
 import '../widgets/profile_photo/index.dart';
 
 class ProfilePhotoPage extends StatefulWidget {
-  final String name;
-  final String email;
+  final User user;
   final String password;
 
   const ProfilePhotoPage({
     super.key,
-    required this.name,
-    required this.email,
+    required this.user,
     required this.password,
   });
 
@@ -40,7 +39,7 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
   void _goToHome() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      MaterialPageRoute(builder: (_) => HomePage(user: widget.user)),
       (route) => false,
     );
   }
@@ -148,7 +147,7 @@ class _ProfilePhotoPageState extends State<ProfilePhotoPage> {
 
   Future<void> _saveProfilePhoto(String? path) async {
     try {
-      final user = await _databaseService.getUser(widget.email);
+      final user = await _databaseService.getUser(widget.user.email);
       if (user == null) {
         Logger.warning('User not found for profile photo update', tag: 'ProfilePhoto');
         return;

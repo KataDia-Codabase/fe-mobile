@@ -1,0 +1,27 @@
+# Project Coding Rules (Non-Obvious Only)
+
+- Always use AppColors, AppTextStyles, AppSpacing, and AppShadows constants - never hardcode values
+- Custom BLoC requires manual listener management: addListener() in initState(), removeListener() in dispose()
+- Always call setState() inside BLoC listener callbacks to trigger UI rebuilds
+- Models must include toJson(), fromJson(), and toEntity() methods for proper data flow
+- Repository interfaces go in domain layer, implementations in data layer
+- Widget files use snake_case with descriptive names (auth_header.dart, not header.dart)
+- Each widget gets its own file - no multiple widgets per file
+- Use barrel exports (index.dart) in widgets/ directories for clean imports
+- All UI text must be in Indonesian - check existing patterns for consistency
+- API calls use http package with custom ApiService class - not dio directly
+- Form validation uses Validators class with Indonesian error messages
+- Error states strip "Exception: " prefix before displaying to users
+- Feature folders must follow structure: data/, domain/, presentation/
+- Pages use _page.dart suffix, widgets use descriptive names without suffixes
+- Logger utility only outputs in debug mode with emoji prefixes
+- Date formatting uses Indonesian month/day names from DateFormatter
+- XP values formatted with StringFormatter.formatXP() (1.5K XP, 2.3M XP)
+- Device detection uses DeviceUtils with 600px width threshold for tablet/phone
+- Navigation uses AppConstants route names, not hardcoded strings
+- State classes extend abstract base classes (AuthState, OnboardingState)
+- UseCase classes have single responsibility and include input validation
+- SharedPreferences accessed through AuthLocalDataSource, not directly
+- Theme applied globally in main.dart via AppTheme.light
+- Import core utilities via barrel export: 'package:katadia_fe/core/utils/index.dart'
+- Import theme via barrel export: 'package:katadia_fe/core/theme/index.dart'

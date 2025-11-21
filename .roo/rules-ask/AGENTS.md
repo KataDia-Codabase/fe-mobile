@@ -1,0 +1,29 @@
+# Project Documentation Rules (Non-Obvious Only)
+
+- Comprehensive documentation exists in docs/KataDia_AI_Agent_Guidelines.md (2300+ lines)
+- Theme system completely documented in code with 50+ colors, 20+ text styles, spacing system
+- Custom BLoC implementation differs from standard flutter_bloc package patterns
+- Feature organization counterintuitive: widgets/ separate from pages/ within each feature
+- Indonesian UI text throughout - English documentation may not match actual app text
+- API base URLs inconsistent between constants and service implementation
+- Router implementation incomplete - currently uses basic MaterialPageRoute
+- Clean Architecture layers: Presentation ← Domain → Data (not standard order)
+- Barrel exports (index.dart) used extensively for clean imports
+- State management manual - no automatic state persistence or restoration
+- Authentication flow: onboarding → login → home (may skip steps based on state)
+- Two navigation systems: route constants vs actual implementation
+- Theme constants mandatory but not enforced by linter
+- Custom utilities replace standard Flutter/Dart functionality
+- Error messages in Indonesian but error handling in English
+- File naming conventions: snake_case for files, PascalCase for classes
+- No external state management packages - custom implementation only
+- Local storage via SharedPreferences - not secure storage for sensitive data
+- Device detection uses arbitrary 600px width threshold
+- Date/time formatting localized to Indonesian regardless of system locale
+- XP formatting with K/M suffixes - not standard number formatting
+- Logger utility only works in debug mode - no production logging
+- Form validation messages in Indonesian - may confuse English-speaking developers
+- Widget organization: one widget per file, no exceptions
+- Repository pattern with abstract interfaces in domain layer
+- UseCase pattern for business logic - not standard service layer
+- Model-Entity separation with toEntity() conversion methods

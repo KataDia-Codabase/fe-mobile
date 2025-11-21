@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/index.dart';
 import '../../../../../core/pages/home_page.dart';
-import '../../../../../data/datasources/local/auth_local_datasource.dart';
-import '../../../../../data/datasources/local/database_service.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/signup_usecase.dart';
+import '../../../../../core/services/auth_bloc_provider.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/login/index.dart';
@@ -34,14 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _initializeAuthBLoC() {
-    final databaseService = DatabaseService();
-    final localDataSource = AuthLocalDataSourceImpl(databaseService: databaseService);
-    final authRepository = AuthRepositoryImpl(localDataSource: localDataSource);
-
-    _authBLoC = AuthBLoC(
-      loginUseCase: LoginUseCase(authRepository: authRepository),
-      signupUseCase: SignupUseCase(authRepository: authRepository),
-    );
+    AuthBLocProvider.initialize();
+    _authBLoC = AuthBLocProvider.instance;
   }
 
   void _handleAuthStateChange(AuthState state) {
@@ -50,10 +40,10 @@ class _LoginPageState extends State<LoginPage> {
     } else if (state is AuthSuccess) {
       setState(() => _isLoading = false);
       Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-      (route) => false,
-    );
+        context,
+        MaterialPageRoute(builder: (_) => HomePage(user: state.user)),
+        (route) => false,
+      );
     } else if (state is AuthError) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(

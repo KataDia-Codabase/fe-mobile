@@ -1,0 +1,35 @@
+# Project Architecture Rules (Non-Obvious Only)
+
+- Clean Architecture implementation: Presentation ← Domain → Data (reverse dependency flow)
+- Custom BLoC pattern replaces flutter_bloc package - manual listener management required
+- Feature-based organization with self-contained modules (data/, domain/, presentation/)
+- Repository pattern with abstract interfaces in domain, concrete implementations in data
+- UseCase pattern for business logic - single responsibility per use case
+- Model-Entity separation: Models for data layer, Entities for domain layer
+- Widget organization: pages/ separate from widgets/ with barrel exports
+- Theme system centralized in core/theme/ with mandatory constants usage
+- State management manual - no automatic persistence or restoration
+- Navigation incomplete - route constants defined but basic implementation
+- API layer inconsistency: constants vs service base URLs
+- Local storage via SharedPreferences - not secure for sensitive data
+- No dependency injection framework - manual DI in feature initialization
+- Authentication state managed locally - no session management
+- Error handling strips "Exception: " prefix for user display
+- Indonesian UI text throughout - affects internationalization architecture
+- Device detection uses arbitrary 600px threshold for tablet/phone
+- Logger utility debug-only - no production logging strategy
+- Form validation centralized but language-specific
+- Date/time formatting localized regardless of system settings
+- Performance considerations: manual listener management can cause memory leaks
+- Scalability: feature-based structure supports modular growth
+- Testing architecture: flutter_test framework but no existing tests
+- Build system: standard Flutter with platform-specific configurations
+- Deployment: supports Android, iOS, web, Linux, macOS, Windows
+- Documentation: comprehensive but primarily in Indonesian
+- Code generation: none used - all code handwritten
+- State persistence: limited to SharedPreferences for authentication
+- Network layer: basic HTTP implementation with custom error handling
+- Caching strategy: local storage only, no in-memory caching
+- Security: basic token storage without encryption
+- Analytics: no implementation currently
+- Performance monitoring: manual logging only in debug mode

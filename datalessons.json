@@ -1,0 +1,126 @@
+[
+  {
+    "table": "lessons",
+    "columns": {
+      "id": "UUID",
+      "title": "VARCHAR",
+      "type": "ENUM('listening','speaking','reading','vocabulary','grammar')",
+      "cefr_level": "ENUM('A1','A2','B1','B2','C1','C2')",
+      "description": "TEXT",
+      "created_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "lesson_contents",
+    "columns": {
+      "id": "UUID",
+      "lesson_id": "UUID",
+      "description": "VARCHAR",
+      "order_index": "INT",
+      "created_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "listening_segments",
+    "columns": {
+      "id": "UUID",
+      "lesson_contents_id": "UUID",
+      "audio_url": "VARCHAR",
+      "order_index": "INT"
+    }
+  },
+  {
+    "table": "reading_passages",
+    "columns": {
+      "id": "UUID",
+      "lesson_contents_id": "UUID",
+      "title": "VARCHAR",
+      "passage_text": "TEXT"
+    }
+  },
+  {
+    "table": "speaking_tasks",
+    "columns": {
+      "id": "UUID",
+      "lesson_contents_id": "UUID",
+      "prompt_text": "TEXT",
+      "audio_url": "VARCHAR"
+    }
+  },
+  {
+    "table": "vocabulary_items",
+    "columns": {
+      "id": "UUID",
+      "lesson_contents_id": "UUID",
+      "description": "VARCHAR",
+      "definition": "VARCHAR",
+      "example_sentence": "TEXT"
+    }
+  },
+  {
+    "table": "quiz_questions",
+    "columns": {
+      "id": "UUID",
+      "lesson_id": "UUID",
+      "question_text": "TEXT",
+      "question_type": "ENUM('reading','listening','grammar')",
+      "audio_url": "VARCHAR",
+      "image_url": "VARCHAR",
+      "order_index": "INT"
+    }
+  },
+  {
+    "table": "quiz_options",
+    "columns": {
+      "id": "UUID",
+      "question_id": "UUID",
+      "option_text": "TEXT",
+      "is_correct": "BOOLEAN",
+      "order_index": "INT"
+    }
+  },
+  {
+    "table": "user_answers",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "question_id": "UUID",
+      "selected_option_id": "UUID",
+      "is_correct": "BOOLEAN",
+      "answered_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "answer_summary",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "lesson_id": "UUID",
+      "question_type": "ENUM('reading','listening','grammar')",
+      "total_questions": "INT",
+      "correct_answers": "INT",
+      "score_percent": "FLOAT",
+      "last_updated": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "assessments",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "cefr_level": "ENUM('A1','A2','B1','B2','C1','C2')",
+      "score": "FLOAT",
+      "taken_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "progress",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "lesson_id": "UUID",
+      "status": "ENUM('not_started','in_progress','completed')",
+      "last_accessed": "TIMESTAMP"
+    }
+  }
+]

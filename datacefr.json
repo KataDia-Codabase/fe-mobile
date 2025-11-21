@@ -1,0 +1,91 @@
+[
+  {
+    "table": "cefr_evaluations",
+    "columns": {
+      "id": "UUID",
+      "cefr_level": "ENUM('A1','A2','B1','B2','C1','C2')",
+      "created_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "cefr_eval_passages",
+    "columns": {
+      "id": "UUID",
+      "evaluation_id": "UUID",
+      "title": "VARCHAR",
+      "passage_text": "TEXT"
+    }
+  },
+  {
+    "table": "cefr_eval_listening",
+    "columns": {
+      "id": "UUID",
+      "evaluation_id": "UUID",
+      "audio_url": "VARCHAR"
+    }
+  },
+  {
+    "table": "cefr_eval_questions",
+    "columns": {
+      "id": "UUID",
+      "evaluation_id": "UUID",
+      "section": "ENUM('reading','listening','grammar')",
+      "question_text": "TEXT",
+      "passage_id": "UUID (nullable)",
+      "listening_id": "UUID (nullable)",
+      "order_index": "INT"
+    }
+  },
+  {
+    "table": "cefr_eval_options",
+    "columns": {
+      "id": "UUID",
+      "question_id": "UUID",
+      "option_text": "TEXT",
+      "is_correct": "BOOLEAN"
+    }
+  },
+  {
+    "table": "cefr_eval_user_answers",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "question_id": "UUID",
+      "selected_option_id": "UUID",
+      "is_correct": "BOOLEAN",
+      "answered_at": "TIMESTAMP"
+    }
+  },
+  {
+    "table": "cefr_eval_speaking_tasks",
+    "columns": {
+      "id": "UUID",
+      "evaluation_id": "UUID",
+      "prompt_text": "TEXT"
+    }
+  },
+  {
+    "table": "cefr_eval_speaking_submissions",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "speaking_id": "UUID",
+      "audio_url": "VARCHAR"
+    }
+  },
+  {
+    "table": "cefr_eval_results",
+    "columns": {
+      "id": "UUID",
+      "user_id": "UUID",
+      "evaluation_id": "UUID",
+      "score_percent": "FLOAT",
+      "grammar_score_percent": "FLOAT",
+      "listening_score_percent": "FLOAT",
+      "reading_score_percent": "FLOAT",
+      "speaking_score_percent": "FLOAT",
+      "estimated_level": "ENUM('A1','A2','B1','B2','C1','C2')",
+      "completed_at": "TIMESTAMP"
+    }
+  }
+]

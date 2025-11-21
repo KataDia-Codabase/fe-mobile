@@ -19,6 +19,9 @@ class AppColors {
   /// Accent yellow - used for XP, badges, and highlights
   static const Color accentYellow = Color(0xFFFFC94A);
   
+    /// Accent yellow dark - used when stronger contrast is needed on warm surfaces
+    static const Color accentYellowDark = Color(0xFFE39B05);
+  
   /// Accent purple - used for AI Chat and premium features
   static const Color accentPurple = Color(0xFF9333EA);
   

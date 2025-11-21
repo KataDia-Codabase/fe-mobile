@@ -63,13 +63,9 @@ class ChatBubble extends StatelessWidget {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      _buildMessageContent(
                         message.content,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: isUser
-                              ? Colors.white
-                              : AppColors.textDark,
-                        ),
+                        isUser,
                       ),
                       if (!isUser && message.audioUrl != null)
                         Padding(
@@ -122,6 +118,60 @@ class ChatBubble extends StatelessWidget {
     final hour = time.hour % 12 == 0 ? 12 : time.hour % 12;
     final period = time.hour >= 12 ? 'PM' : 'AM';
     return '$hour:${time.minute.toString().padLeft(2, '0')} $period';
+  }
+
+  Widget _buildMessageContent(String content, bool isUser) {
+    // Parse markdown bold syntax (**word**)
+    final textSpans = _parseMarkdownBold(content, isUser);
+    
+    return RichText(
+      text: TextSpan(
+        style: AppTextStyles.bodyMedium.copyWith(
+          color: isUser ? Colors.white : AppColors.textDark,
+        ),
+        children: textSpans,
+      ),
+    );
+  }
+
+  List<TextSpan> _parseMarkdownBold(String text, bool isUser) {
+    final List<TextSpan> spans = [];
+    final pattern = RegExp(r'\*\*(.+?)\*\*');
+    int lastIndex = 0;
+
+    for (final match in pattern.allMatches(text)) {
+      // Add regular text before the match
+      if (match.start > lastIndex) {
+        spans.add(TextSpan(
+          text: text.substring(lastIndex, match.start),
+        ));
+      }
+
+      // Add bold text
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          color: isUser ? Colors.white : AppColors.textDark,
+        ),
+      ));
+
+      lastIndex = match.end;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastIndex),
+      ));
+    }
+
+    // If no bold found, return single span with original text
+    if (spans.isEmpty) {
+      spans.add(TextSpan(text: text));
+    }
+
+    return spans;
   }
 }
 

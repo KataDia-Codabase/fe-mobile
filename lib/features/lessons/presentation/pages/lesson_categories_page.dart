@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:katadia_fe/core/theme/index.dart';
-
-import '../widgets/index.dart';
-import 'cefr_assessment_intro_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/pages/cefr_assessment_intro_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/pages/listening_lessons_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/pages/reading_lessons_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/pages/grammar_lessons_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/pages/speaking_lessons_page.dart';
+import 'package:katadia_fe/features/lessons/presentation/widgets/index.dart';
 
 class LessonCategoriesPage extends StatelessWidget {
   LessonCategoriesPage({super.key});
@@ -28,6 +31,7 @@ class LessonCategoriesPage extends StatelessWidget {
       icon: Icons.mic_none_rounded,
       accentColor: AppColors.accentGreen,
       backgroundColor: AppColors.surface,
+      routeBuilder: () => const SpeakingLessonsPage(),
     ),
     _LessonCategory(
       title: 'Listening Practice',
@@ -38,6 +42,7 @@ class LessonCategoriesPage extends StatelessWidget {
       icon: Icons.headphones_rounded,
       accentColor: AppColors.accentPurple,
       backgroundColor: AppColors.surface,
+      routeBuilder: () => const ListeningLessonsPage(),
     ),
     _LessonCategory(
       title: 'Reading Comprehension',
@@ -48,16 +53,18 @@ class LessonCategoriesPage extends StatelessWidget {
       icon: Icons.menu_book_rounded,
       accentColor: AppColors.accentYellow,
       backgroundColor: AppColors.surface,
+      routeBuilder: () => const ReadingLessonsPage(),
     ),
     _LessonCategory(
-      title: 'Vocabulary Builder',
-      subtitle: 'Kosakata',
-      description: 'Learn new words daily',
-      lessons: 100,
-      duration: '5 min',
-      icon: Icons.bookmarks_outlined,
-      accentColor: AppColors.primary,
+      title: 'Grammar Lessons',
+      subtitle: 'Latihan Grammar',
+      description: 'Pelajari aturan grammar secara interaktif',
+      lessons: 40,
+      duration: '5-15 min',
+      icon: Icons.auto_fix_high_rounded,
+      accentColor: AppColors.accentPurple,
       backgroundColor: AppColors.surface,
+      routeBuilder: () => const GrammarLessonsPage(),
     ),
   ];
 

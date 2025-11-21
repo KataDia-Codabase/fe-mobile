@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:katadia_fe/core/pages/home_page.dart';
 import '../../../../../core/theme/index.dart';
 import '../../../../../data/datasources/local/auth_local_datasource.dart';
 import '../../../../../data/datasources/local/database_service.dart';
@@ -53,8 +52,7 @@ class _SignupPageState extends State<SignupPage> {
         context,
         MaterialPageRoute(
           builder: (_) => ProfilePhotoPage(
-            name: state.user.name,
-            email: state.user.email,
+            user: state.user,
             password: _passwordController.text,
           ),
         ),
@@ -89,11 +87,6 @@ class _SignupPageState extends State<SignupPage> {
     }
 
     _authBLoC.signup(name, email, password);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => HomePage(),
-      ),
-    );
   }
 
   void _backToLogin() {

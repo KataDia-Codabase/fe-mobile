@@ -3,3 +3,7 @@ export 'profile_menu_item.dart';
 export 'account_section.dart';
 export 'preferences_section.dart';
 export 'general_section.dart';
+export 'edit_profile_dialog.dart';
+export 'edit_email_dialog.dart';
+export 'change_password_dialog.dart';
+export 'logout_button.dart';

@@ -27,6 +27,9 @@ class AuthRepositoryImpl implements AuthRepository {
       email: user.email,
       avatar: user.avatar,
       accessToken: user.accessToken,
+      cefrLevel: user.cefrLevel,
+      xp: user.xp,
+      streak: user.streak,
     );
   }
 
@@ -46,6 +49,9 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password, // In real app, hash this
       avatar: null,
       accessToken: 'local_token_${DateTime.now().millisecondsSinceEpoch}',
+      cefrLevel: 'A1',
+      xp: 0,
+      streak: 0,
     );
     
     await _localDataSource.saveUser(newUser);
@@ -56,6 +62,9 @@ class AuthRepositoryImpl implements AuthRepository {
       email: newUser.email,
       avatar: newUser.avatar,
       accessToken: newUser.accessToken,
+      cefrLevel: newUser.cefrLevel,
+      xp: newUser.xp,
+      streak: newUser.streak,
     );
   }
 
@@ -72,6 +81,9 @@ class AuthRepositoryImpl implements AuthRepository {
         email: lastUser.email,
         avatar: lastUser.avatar,
         accessToken: lastUser.accessToken,
+        cefrLevel: lastUser.cefrLevel,
+        xp: lastUser.xp,
+        streak: lastUser.streak,
       );
     }
     return null;

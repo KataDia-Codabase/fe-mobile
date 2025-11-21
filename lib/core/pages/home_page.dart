@@ -27,20 +27,21 @@ class _HomePageState extends State<HomePage> {
   late final int _lessonsCompleted;
 
   final int _notificationCount = 1;
-  final int _dailyTasksCompleted = 1;
+  final int _dailyTasksCompleted = 0;
   final int _dailyTasksTotal = 4;
-  final int _xpEarnedToday = 30;
+  final int _xpEarnedToday = 0;
 
   @override
   void initState() {
     super.initState();
     final user = widget.user;
     _userName = user?.name ?? 'Sarah Anderson';
-    _cefrLevel = user?.cefrLevel.toUpperCase() ?? 'B1';
+    // Default to N/A if CEFR level is still unknown
+    _cefrLevel = (user?.cefrLevel != null && user!.cefrLevel.isNotEmpty) ? user.cefrLevel.toUpperCase() : 'N/A';
     _cefrDescription = _getCefrDescription(_cefrLevel);
-    _xp = user?.xp ?? 1250;
-    _streak = user?.streak ?? 7;
-    _lessonsCompleted = 12;
+    _xp = user?.xp ?? 0;
+    _streak = user?.streak ?? 0;
+    _lessonsCompleted = 0;
   }
 
   String _getCefrDescription(String level) {
@@ -57,8 +58,10 @@ class _HomePageState extends State<HomePage> {
         return 'Advanced - Effective Proficiency';
       case 'C2':
         return 'Proficient - Mastery';
+      case 'N/A':
+        return 'Level belum ditentukan - Ambil tes CEFR untuk memulai';
       default:
-        return 'Intermediate - Independent User';
+        return 'Level belum ditentukan';
     }
   }
 

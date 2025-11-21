@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:katadia_fe/core/theme/index.dart';
 import 'package:katadia_fe/core/utils/index.dart';
@@ -59,7 +60,7 @@ class ProfileOverviewCard extends StatelessWidget {
   final int totalXp;
   final int streakDays;
   final int lessonsCompleted;
-  final String avatarEmoji;
+  final String? avatarPath;
 
   const ProfileOverviewCard({
     super.key,
@@ -70,7 +71,7 @@ class ProfileOverviewCard extends StatelessWidget {
     required this.totalXp,
     required this.streakDays,
     required this.lessonsCompleted,
-    this.avatarEmoji = '🧑‍🎓',
+    this.avatarPath,
   });
 
   @override
@@ -89,19 +90,7 @@ class ProfileOverviewCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: AppColors.bgLight,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  avatarEmoji,
-                  style: const TextStyle(fontSize: 32),
-                ),
-              ),
+              _buildAvatarContainer(),
               SizedBox(width: AppSpacing.lg),
               Expanded(
                 child: Column(
@@ -153,6 +142,63 @@ class ProfileOverviewCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAvatarContent() {
+    if (avatarPath != null && avatarPath!.isNotEmpty) {
+      // Try to load image from file path
+      try {
+        final imageFile = File(avatarPath!);
+        if (imageFile.existsSync()) {
+          return ClipOval(
+            child: Image.file(
+              imageFile,
+              fit: BoxFit.cover,
+              width: 64,
+              height: 64,
+              errorBuilder: (context, error, stackTrace) {
+                return const Text(
+                  '🧑‍🎓',
+                  style: TextStyle(fontSize: 32),
+                );
+              },
+            ),
+          );
+        } else {
+          return const Text(
+            '🧑‍🎓',
+            style: TextStyle(fontSize: 32),
+          );
+        }
+      } catch (e) {
+        return const Text(
+          '🧑‍🎓',
+          style: TextStyle(fontSize: 32),
+        );
+      }
+    }
+    // Default emoji
+    return const Text(
+      '🧑‍🎓',
+      style: TextStyle(fontSize: 32),
+    );
+  }
+
+  Widget _buildAvatarContainer() {
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        color: AppColors.bgLight,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.borderLight,
+          width: 2,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: _buildAvatarContent(),
     );
   }
 }
